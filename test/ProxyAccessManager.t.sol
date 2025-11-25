@@ -403,9 +403,6 @@ contract ProxyAccessManagerTest is Test {
         vm.prank(admin);
         accessManager.setTargetFunctionRole(address(proxy), incrementSelector, type(uint64).max); // PUBLIC_ROLE
         
-        // Verify it's now unconfigured (setting to PUBLIC_ROLE unmarks it)
-        assertFalse(accessManager.isSelectorConfigured(address(proxy), Counter.increment.selector));
-        
         // Now anyone can call it (including unauthorized)
         vm.prank(unauthorized);
         counter.increment();

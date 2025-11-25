@@ -63,9 +63,6 @@ contract CustomAccessManager is AccessManager {
     /**
      * @notice Override setTargetFunctionRole to track configured selectors
      * @dev This allows us to distinguish between unconfigured (returns PUBLIC_ROLE) and explicitly set roles
-     * 
-     *      IMPORTANT: Setting a function to PUBLIC_ROLE effectively "unsets" it - it becomes unconfigured
-     *      and will be treated the same as if it was never configured (public by default).
      */
     function setTargetFunctionRole(
         address target,
@@ -78,15 +75,7 @@ contract CustomAccessManager is AccessManager {
         // Handle configuration tracking
         for (uint256 i = 0; i < selectors.length; ++i) {
             bytes32 key = keccak256(abi.encodePacked(target, selectors[i]));
-            
-            if (roleId == PUBLIC_ROLE) {
-                // Setting to PUBLIC_ROLE effectively "unsets" the configuration
-                // Mark as unconfigured (or remove from configured mapping)
-                _configuredSelectors[key] = false;
-            } else {
-                // Mark as configured for any other role
-                _configuredSelectors[key] = true;
-            }
+            _configuredSelectors[key] = true;
         }
     }
 }
